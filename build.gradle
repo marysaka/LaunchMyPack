@@ -24,3 +24,14 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile fileTree(dir: 'libs', include: '*.jar')
 }
+
+task demoJar(type: Jar) {
+	manifest {
+        	attributes 'Main-Class': 'eu.thog92.launcher.demoimpl.Main'
+    }
+    classifier = 'demo' 
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build.dependsOn demoJar
