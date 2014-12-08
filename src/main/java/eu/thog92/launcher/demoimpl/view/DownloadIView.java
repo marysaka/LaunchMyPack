@@ -73,6 +73,7 @@ public class DownloadIView extends JFrame implements Runnable
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter()
         {
+            @Override
             public void windowClosing(WindowEvent evt)
             {
                 onExit();
@@ -85,8 +86,7 @@ public class DownloadIView extends JFrame implements Runnable
             }
         });
         
-        // TODO Auto-generated method stub
-        infotxt = "Chargement en cours ...";
+        infotxt = "Loading...";
         setBounds(100, 100, 600, 146);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

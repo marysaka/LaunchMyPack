@@ -13,6 +13,7 @@ public class AssetObject {
         return this.size;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -26,6 +27,7 @@ public class AssetObject {
         return this.hash.equals(that.hash);
     }
 
+    @Override
     public int hashCode() {
         int result = this.hash.hashCode();
         result = 31 * result + (int) (this.size ^ this.size >>> 32);

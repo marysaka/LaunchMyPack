@@ -62,12 +62,10 @@ public class Job {
                 System.out.println(task.download());
             } catch (IOException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             
             float result = (i/maxSize) * 100;
-            System.out.println(result);
             view.setProgressValue((int) (result));
         }
         view.getProgressBar().setStringPainted(false);

@@ -21,7 +21,8 @@ public class ChecksummedDownloadable
     super(proxy, remoteFile, localFile, forceDownload);
   }
   
-  public String download()
+  @Override
+public String download()
     throws IOException
   {
     this.numAttempts += 1;
@@ -85,7 +86,6 @@ public class ChecksummedDownloadable
     try
     {
       HttpURLConnection connection = makeConnection(getUrl());
-      System.out.println(getUrl());
       int status = connection.getResponseCode();
       if (status / 100 == 2)
       {

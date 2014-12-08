@@ -102,7 +102,7 @@ public class UpdateChecker
                         SelfUpdate.runUpdate(path, temporaryUpdatePath);
                     } catch (IOException e)
                     {
-                        // TODO Auto-generated catch block
+                        
                         e.printStackTrace();
                     }
                     // launcher.println("Server : "+filesize + " Client : " +

@@ -16,7 +16,8 @@ import java.util.Map;
 public class LowerCaseEnumTypeAdapterFactory
   implements TypeAdapterFactory
 {
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @Override
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
   {
     Class<? super T> rawType = type.getRawType();
@@ -29,7 +30,8 @@ public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
     }
     return new TypeAdapter()
     {
-      public void write(JsonWriter out, Object value)
+      @Override
+    public void write(JsonWriter out, Object value)
         throws IOException
       {
         if (value == null) {
@@ -39,7 +41,8 @@ public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
         }
       }
       
-      public T read(JsonReader reader)
+      @Override
+    public T read(JsonReader reader)
         throws IOException
       {
         if (reader.peek() == JsonToken.NULL)

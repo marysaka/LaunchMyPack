@@ -18,6 +18,7 @@ public class LogFormatter extends Formatter
         this.dataformat = new SimpleDateFormat("[HH:mm:ss]");
     }
     
+    @Override
     public String format(LogRecord par1LogRecord)
     {
         StringBuilder stringbuilder = new StringBuilder();

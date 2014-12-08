@@ -17,6 +17,7 @@ public class Main
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.invokeLater(new Runnable()
             {
+                @Override
                 public void run()
                 {
                     final MainController main = new MainController();
@@ -37,19 +38,19 @@ public class Main
             });
         } catch (ClassNotFoundException e)
         {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         } catch (InstantiationException e)
         {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         } catch (IllegalAccessException e)
         {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         } catch (UnsupportedLookAndFeelException e)
         {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         }
 }

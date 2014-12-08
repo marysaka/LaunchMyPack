@@ -90,7 +90,6 @@ public class MainView extends JFrame implements IView {
     @Override
     public void modelPropertyChange(final PropertyChangeEvent evt)
     {
-        System.out.println(evt.getPropertyName() + ": " + evt.getNewValue());
         if (evt.getPropertyName().equals(MainController.ELEMENT_BUTTON_PLAY))
         {
             final RemotePack[] packs = (RemotePack[]) evt.getNewValue();
@@ -124,7 +123,7 @@ public class MainView extends JFrame implements IView {
                         controller.manageStart();
                     } catch (InterruptedException e)
                     {
-                        // TODO Auto-generated catch block
+                        
                         e.printStackTrace();
                     }
                 }

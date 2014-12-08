@@ -14,11 +14,13 @@ public class ReleaseTypeAdapterFactory<T extends ReleaseType> extends
     {
     }
     
+    @Override
     public void write(JsonWriter out, T value) throws IOException
     {
         out.value(value.getName());
     }
     
+    @Override
     @SuppressWarnings("unchecked")
     public T read(JsonReader in) throws IOException
     {

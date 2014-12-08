@@ -44,6 +44,7 @@ public class FilesManager implements Runnable {
         view.getProgressBar().setIndeterminate(true);
     }
 
+    @Override
     public void run() {
         // TODO Auto-generated method stub
         indexFile = new File(model.getModPackDir(), "MD5SUMS");
@@ -61,15 +62,14 @@ public class FilesManager implements Runnable {
         try {
             url1 = new URL(model.getDownloadURL() + "/MD5SUMS");
         } catch (MalformedURLException e1) {
-            // TODO Auto-generated catch block
+            
             e1.printStackTrace();
         }
         HttpURLConnection yc = null;
         try {
             yc = (HttpURLConnection) url1.openConnection();
-            System.out.println(yc.getResponseCode());
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+            
             e1.printStackTrace();
         }
         
@@ -78,7 +78,7 @@ public class FilesManager implements Runnable {
             in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+            
             e1.printStackTrace();
         }
         String inputLine;
@@ -94,7 +94,7 @@ public class FilesManager implements Runnable {
             in.close();
             // bw.close();
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+            
             e1.printStackTrace();
         }
 
@@ -115,11 +115,11 @@ public class FilesManager implements Runnable {
                     clientIndex.put(name, md5);
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                
                 e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         }
         checkRemote();
@@ -155,7 +155,7 @@ public class FilesManager implements Runnable {
             ops.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         }
     }
@@ -178,7 +178,7 @@ public class FilesManager implements Runnable {
             bw.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         }
     }
@@ -196,7 +196,7 @@ public class FilesManager implements Runnable {
                         model.getDownloadURL()
                         + name.replace("./", "/").replaceAll(" ", "%20"));
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
+                
                 e.printStackTrace();
             }
             String md5server = serverIndex.get(name);
@@ -234,7 +234,7 @@ public class FilesManager implements Runnable {
                         model.getDownloadURL()
                         + name.replace("./", "/").replaceAll(" ", "%20"));
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
+                
                 e.printStackTrace();
             }
             String md5server = serverIndex.get(name);
@@ -284,14 +284,8 @@ public class FilesManager implements Runnable {
     }
 
     private void addtoDownload(URL url, File tmpfile, String md5server, long filesize) {
-        // TODO Auto-generated method stub
-        //System.out.println(filesize);
-        //log.logInfo(url);
         if (!urls.contains(url)) {
-            System.out.println(tmpfile);
-        //log.logInfo(url);
-            //downloadabletmp.download();
-            //dowloadable.add(downloadabletmp);
+            //log.logInfo(url);
             model.addDownloadListModPack(new FileDownload(url, tmpfile, filesize));
             urls.add(url);
         }

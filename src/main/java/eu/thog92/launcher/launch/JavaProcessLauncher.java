@@ -74,6 +74,7 @@ public class JavaProcessLauncher
         return this.jvmPath;
     }
     
+    @Override
     public String toString()
     {
         return "JavaProcessLauncher[commands=" + this.commands + ", java="

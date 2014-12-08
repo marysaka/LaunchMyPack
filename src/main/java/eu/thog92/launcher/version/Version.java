@@ -191,7 +191,8 @@ public class Version
     return neededFiles;
   }
   
-  public String toString()
+  @Override
+public String toString()
   {
     return "Version{id='" + this.id + '\'' + ", updatedTime=" + this.time + ", releasedTime=" + this.time + ", type=" + this.type + ", libraries=" + this.libraries + ", mainClass='" + this.mainClass + '\'' + ", jar='" + this.jar + '\'' + ", minimumLauncherVersion=" + this.minimumLauncherVersion + '}';
   }
@@ -265,11 +266,11 @@ public class Version
         return (Version) builder.create().fromJson(FileUtils.readFileToString(json, Charsets.UTF_8), Version.class);
     } catch (JsonSyntaxException e)
     {
-        // TODO Auto-generated catch block
+        
         e.printStackTrace();
     } catch (IOException e)
     {
-        // TODO Auto-generated catch block
+        
         e.printStackTrace();
     }
     return null;

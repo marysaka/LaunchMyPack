@@ -62,7 +62,8 @@ public class VersionSyncInfo
     return this.isUpToDate;
   }
   
-  public String toString()
+  @Override
+public String toString()
   {
     return "VersionSyncInfo{localVersion=" + this.localVersion + ", remoteVersion=" + this.remoteVersion + ", isInstalled=" + this.isInstalled + ", isUpToDate=" + this.isUpToDate + '}';
   }

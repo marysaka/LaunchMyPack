@@ -147,7 +147,8 @@ public class Library
     return SUBSTITUTOR.replace(result);
   }
   
-  public String toString()
+  @Override
+public String toString()
   {
     return "Library{name='" + this.name + '\'' + ", rules=" + this.rules + ", natives=" + this.natives + ", extract=" + this.extract + '}';
   }

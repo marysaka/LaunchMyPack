@@ -75,6 +75,7 @@ public class CompatibilityRule
       return true;
     }
     
+    @Override
     public String toString()
     {
       return "OSRestriction{name=" + this.name + ", version='" + this.version + '\'' + ", arch='" + this.arch + '\'' + '}';
@@ -110,7 +111,8 @@ public class CompatibilityRule
     return this.os;
   }
   
-  public String toString()
+  @Override
+public String toString()
   {
     return "Rule{action=" + this.action + ", os=" + this.os + '}';
   }
