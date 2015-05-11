@@ -1,5 +1,5 @@
 apply plugin: 'java'
-apply plugin:'application'
+apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
@@ -34,4 +34,6 @@ task demoJar(type: Jar) {
     with jar
 }
 
-build.dependsOn demoJar
+artifacts {
+    archives demoJar
+}
