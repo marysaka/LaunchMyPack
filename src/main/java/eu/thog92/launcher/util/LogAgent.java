@@ -43,12 +43,9 @@ public class LogAgent
     {
         LogManager.getLogManager().reset();
         Handler[] ahandler = this.clientLogger.getHandlers();
-        int i = ahandler.length;
 
         for (Handler handler : ahandler)
-        {
             this.clientLogger.removeHandler(handler);
-        }
 
         LogFormatter logformatter = new LogFormatter(this);
 

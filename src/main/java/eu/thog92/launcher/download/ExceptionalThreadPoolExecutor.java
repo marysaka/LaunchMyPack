@@ -24,10 +24,8 @@ public class ExceptionalThreadPoolExecutor extends ThreadPoolExecutor
                     future.get();
             } catch (final CancellationException ce)
             {
-                t = ce;
             } catch (final ExecutionException ee)
             {
-                t = ee.getCause();
             } catch (final InterruptedException ie)
             {
                 Thread.currentThread().interrupt();

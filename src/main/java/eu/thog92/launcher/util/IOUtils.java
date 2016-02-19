@@ -1,5 +1,7 @@
 package eu.thog92.launcher.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -21,5 +23,17 @@ public class IOUtils
                 // ignored
             }
         }
+    }
+
+    public static boolean delete(File f)
+    {
+        if (f.isDirectory()) {
+            for (File c : f.listFiles())
+                if (!delete(c))
+                    return false;
+        }
+        if (!f.delete())
+            return false;
+        return true;
     }
 }

@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder;
 import eu.thog92.launcher.download.Downloadable;
 import eu.thog92.launcher.model.DownloadModel;
 import eu.thog92.launcher.model.LaunchModel;
-import eu.thog92.launcher.util.LogAgent;
-import eu.thog92.launcher.util.OperatingSystem;
-import eu.thog92.launcher.util.StringUtils;
-import eu.thog92.launcher.util.Util;
+import eu.thog92.launcher.util.*;
 import eu.thog92.launcher.version.*;
 
 import java.io.*;
@@ -50,9 +47,9 @@ public class GameLaunch implements JavaProcessRunnable
 
         if (nativeDir.exists())
         {
-            if (!nativeDir.delete())
+            if (!IOUtils.delete(nativeDir))
             {
-                throw new IOException("Native cannot be remove !");
+                throw new IOException("Native cannot be remove!");
             }
         }
         if (!nativeDir.isDirectory())
