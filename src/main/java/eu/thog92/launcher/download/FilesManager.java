@@ -1,91 +1,82 @@
 package eu.thog92.launcher.download;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import eu.thog92.launcher.model.DownloadModel;
+import eu.thog92.launcher.util.LogAgent;
+import eu.thog92.launcher.util.Util;
+import eu.thog92.launcher.view.IDownloadView;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.commons.io.FileUtils;
+public class FilesManager implements Runnable
+{
 
-import eu.thog92.launcher.demoimpl.model.DownloadModel;
-import eu.thog92.launcher.demoimpl.view.DownloadIView;
-import eu.thog92.launcher.util.LogAgent;
-
-public class FilesManager implements Runnable {
-
+    private static final LogAgent LOG_AGENT = LogAgent.getLogAgent();
     private Map<String, String> serverIndex = new HashMap<String, String>();
     private Map<String, String> clientIndex = new HashMap<String, String>();
     private List<URL> urls = new ArrayList<URL>();
-    //private HashSet<Downloadable> dowloadable;
-    private List<String> fileslines = new ArrayList<String>();
+    private List<String> fileLines = new ArrayList<String>();
     private File indexFile;
-    private DownloadIView view;
-
+    private IDownloadView view;
     private DownloadModel model;
-    public FilesManager(DownloadModel m, DownloadIView v)
+
+    public FilesManager(DownloadModel m, IDownloadView v)
     {
         this.view = v;
         this.model = m;
         view.setStatut("Check for update ...");
-        view.getProgressBar().setIndeterminate(true);
+        view.setIndeterminate(true);
     }
 
     @Override
-    public void run() {
-        // TODO Auto-generated method stub
+    public void run()
+    {
         indexFile = new File(model.getModPackDir(), "MD5SUMS");
-        //dowloadable =  new HashSet<Downloadable>();
-        //log.logInfo(Thread.currentThread().getName());
         checkForUpdate();
-        view.getProgressBar().setIndeterminate(false);
+        view.setIndeterminate(false);
     }
 
-
-    private synchronized void checkForUpdate() {
-        //Statut.setStatut("Checking for update");
-
+    private synchronized void checkForUpdate()
+    {
         URL url1 = null;
-        try {
+        try
+        {
             url1 = new URL(model.getDownloadURL() + "/MD5SUMS");
-        } catch (MalformedURLException e1) {
-            
+        } catch (MalformedURLException e1)
+        {
+
             e1.printStackTrace();
         }
         HttpURLConnection yc = null;
-        try {
+        try
+        {
             yc = (HttpURLConnection) url1.openConnection();
-        } catch (IOException e1) {
-            
+        } catch (IOException e1)
+        {
+
             e1.printStackTrace();
         }
-        
+
         BufferedReader in = null;
-        try {
+        try
+        {
             in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
-        } catch (IOException e1) {
-            
+        } catch (IOException e1)
+        {
+
             e1.printStackTrace();
         }
         String inputLine;
-        try {
+        try
+        {
 
-            while ((inputLine = in.readLine()) != null) {
-                fileslines.add(inputLine);
+            while ((inputLine = in.readLine()) != null)
+            {
+                fileLines.add(inputLine);
                 String md5 = inputLine.substring(inputLine.lastIndexOf(' ') + 1);
                 String name = inputLine.replace(" " + md5, "");
                 serverIndex.put(name, md5);
@@ -93,186 +84,209 @@ public class FilesManager implements Runnable {
 
             in.close();
             // bw.close();
-        } catch (IOException e1) {
-            
+        } catch (IOException e1)
+        {
+
             e1.printStackTrace();
         }
 
-        if (!indexFile.exists()) {
+        if (!indexFile.exists())
+        {
             this.createFile();
         }
 
-        try {
+        try
+        {
             InputStream ips = new FileInputStream(indexFile);
             InputStreamReader ipsr = new InputStreamReader(ips);
             BufferedReader br = new BufferedReader(ipsr);
             String ligne;
-            try {
-                while ((ligne = br.readLine()) != null) {
+            try
+            {
+                while ((ligne = br.readLine()) != null)
+                {
                     String md5 = ligne.substring(ligne.lastIndexOf(' ') + 1);
                     String name = ligne.replace(" " + md5, "");
 
                     clientIndex.put(name, md5);
                 }
-            } catch (IOException e) {
-                
+            } catch (IOException e)
+            {
+
                 e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
-            
+        } catch (FileNotFoundException e)
+        {
+
             e.printStackTrace();
         }
         checkRemote();
-
         checkLocal();
-        if (!this.fileslines.isEmpty()) {
+
+        if (!this.fileLines.isEmpty())
+        {
             this.writeClientFilesLines();
         }
-//              job.addDownloadables(dowloadable);
-//              Statut.addTask(job);
-//              job.startDownloading();
-//              
-
     }
 
-    private void writeClientFilesLines() {
+    private void writeClientFilesLines()
+    {
         // TODO Auto-generated method stub
-        try {
+        try
+        {
 
             indexFile.createNewFile();
             FileOutputStream ops = new FileOutputStream(indexFile);
             OutputStreamWriter opsr = new OutputStreamWriter(ops);
             BufferedWriter bw = new BufferedWriter(opsr);
-            for (int i = 0; i < fileslines.size(); i++) {
-
-                bw.write(fileslines.get(i));
+            for (String filesline : fileLines)
+            {
+                bw.write(filesline);
                 bw.newLine();
                 bw.flush();
-
             }
             bw.close();
             opsr.close();
             ops.close();
 
-        } catch (IOException e) {
-            
+        } catch (IOException e)
+        {
+
             e.printStackTrace();
         }
     }
 
-    private void createFile() {
-        // TODO Auto-generated method stub
-        try {
+    private void createFile()
+    {
+        try
+        {
 
             indexFile.createNewFile();
             FileOutputStream ops = new FileOutputStream(indexFile);
             OutputStreamWriter opsr = new OutputStreamWriter(ops);
             BufferedWriter bw = new BufferedWriter(opsr);
-            for (int i = 0; i < fileslines.size(); i++) {
+            for (String filesline : fileLines)
+            {
 
-                bw.write(fileslines.get(i));
+                bw.write(filesline);
                 bw.newLine();
                 bw.flush();
 
             }
             bw.close();
 
-        } catch (IOException e) {
-            
+        } catch (IOException e)
+        {
+
             e.printStackTrace();
         }
     }
-    private static final LogAgent log = LogAgent.getLogAgent();
 
-    private void checkRemote() {
-        log.logInfo("Starting filesums checking ...");
+    private void checkRemote()
+    {
+        LOG_AGENT.logInfo("Starting filesums checking ...");
         // TODO Auto-generated method stub
         Set<String> setserver = this.serverIndex.keySet();
-        
-        for (String name : setserver) {
+
+        for (String name : setserver)
+        {
             URL url = null;
-            try {
+            try
+            {
                 url = new URL(
                         model.getDownloadURL()
-                        + name.replace("./", "/").replaceAll(" ", "%20"));
-            } catch (MalformedURLException e) {
-                
+                                + name.replace("./", "/").replaceAll(" ", "%20"));
+            } catch (MalformedURLException e)
+            {
+
                 e.printStackTrace();
             }
             String md5server = serverIndex.get(name);
             String md5client = clientIndex.get(name);
 
-            //log.logInfo(name);
             File tmpfile = new File(model.getModPackDir(), name.replace("./", ""));
-            long filesize = tryGetFileSize(url);
-            
-            if (!tmpfile.exists()) {
-                this.addtoDownload(url, tmpfile, md5server, filesize);
-            }
-            else
+            long filesize = Util.tryGetFileSize(url);
+
+            if (!tmpfile.exists())
             {
-                if(md5client == null)
+                this.addtoDownload(url, tmpfile, md5server, filesize);
+            } else
+            {
+                if (md5client == null)
                 {
-                    if (!FileUtils.deleteQuietly(tmpfile.getAbsoluteFile())) {
-                        log.logInfo("ERREUR SUR " + tmpfile.toString());
+                    if (!tmpfile.delete())
+                    {
+                        LOG_AGENT.logInfo("ERREUR SUR " + tmpfile.toString());
                     }
                     this.addtoDownload(url, tmpfile, md5server, filesize);
                 }
             }
             view.setInfo(name.replace("./", ""));
-            log.logInfo("MD5 de " + name.replace("./", "") + " client:" + md5client + " , server:" + md5server);
+            LOG_AGENT.logInfo("MD5 de " + name.replace("./", "") + " client:" + md5client + " , server:" + md5server);
         }
     }
 
-    private void checkLocal() {
+    private void checkLocal()
+    {
         // TODO Auto-generated method stub
         Set<String> setclient = this.clientIndex.keySet();
-        for (String name : setclient) {
+        for (String name : setclient)
+        {
             URL url = null;
-            try {
+            try
+            {
                 url = new URL(
                         model.getDownloadURL()
-                        + name.replace("./", "/").replaceAll(" ", "%20"));
-            } catch (MalformedURLException e) {
-                
+                                + name.replace("./", "/").replaceAll(" ", "%20"));
+            } catch (MalformedURLException e)
+            {
+
                 e.printStackTrace();
             }
             String md5server = serverIndex.get(name);
             String md5client = clientIndex.get(name);
 
             File tmpfile = new File(model.getModPackDir(), name.replace("./", ""));
-            long filesize = tryGetFileSize(url);
+            long filesize = Util.tryGetFileSize(url);
             boolean isDelete = false;
-            if (tmpfile.getName().contains("minecraft.jar")) {
-                //log.logInfo("ICI");
-               
+            if (tmpfile.getName().contains("minecraft.jar"))
+            {
+                //LOG_AGENT.logInfo("ICI");
+
             }
-            if (tmpfile.getName().contains("minecraft.json")) {
-                //log.logInfo("ICI");
-               
+            if (tmpfile.getName().contains("minecraft.json"))
+            {
+                //LOG_AGENT.logInfo("ICI");
+
             }
 
-            if (tmpfile.exists()) {
+            if (tmpfile.exists())
+            {
 
-                //log.logInfo(tmpfile);
+                //LOG_AGENT.logInfo(tmpfile);
                 //String md5file = FileHashSum.md5sum(tmpfile);
 //                if(!md5file.equals(md5client))
 //                {
-//                  //log.logInfo("md5 172");
+//                  //LOG_AGENT.logInfo("md5 172");
 //                  this.addtoDownload(url, tmpfile, md5server, filesize);
 //                }
-                if (md5server == null) {
-                    log.logInfo("File " + tmpfile.getAbsolutePath() + " is unused, removing...");
+                if (md5server == null)
+                {
+                    LOG_AGENT.logInfo("File " + tmpfile.getAbsolutePath() + " is unused, removing...");
 
-                    if (!FileUtils.deleteQuietly(tmpfile.getAbsoluteFile())) {
-                        log.logInfo("ERREUR SUR " + tmpfile.toString());
+                    if (!tmpfile.delete())
+                    {
+                        LOG_AGENT.logInfo("ERREUR SUR " + tmpfile.toString());
                     }
 
                 }
             }
-            if (!isDelete) {
-                if (md5server != null && md5client != null) {
-                    if (!md5server.equals(md5client)) {
+            if (!isDelete)
+            {
+                if (md5server != null && md5client != null)
+                {
+                    if (!md5server.equals(md5client))
+                    {
                         this.addtoDownload(url, tmpfile, md5server, filesize);
                     }
                 }
@@ -283,26 +297,14 @@ public class FilesManager implements Runnable {
 
     }
 
-    private void addtoDownload(URL url, File tmpfile, String md5server, long filesize) {
-        if (!urls.contains(url)) {
-            //log.logInfo(url);
+    private void addtoDownload(URL url, File tmpfile, String md5server, long filesize)
+    {
+        if (!urls.contains(url))
+        {
+            //LOG_AGENT.logInfo(url);
             model.addDownloadListModPack(new FileDownload(url, tmpfile, filesize));
             urls.add(url);
         }
 
-    }
-
-    private int tryGetFileSize(URL url) {
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            conn.getInputStream();
-            return conn.getContentLength();
-        } catch (IOException e) {
-            return -1;
-        } finally {
-            conn.disconnect();
-        }
     }
 }

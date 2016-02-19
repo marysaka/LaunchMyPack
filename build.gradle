@@ -10,7 +10,7 @@ version = "0.0.1"
 group = "eu.thog92.launcher"
 archivesBaseName = "Launcher"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 compileJava.options.encoding = 'UTF-8'
 
 
@@ -20,14 +20,12 @@ repositories {
 
 dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 task demoJar(type: Jar) {
 	manifest {
-        	attributes 'Main-Class': 'eu.thog92.launcher.demoimpl.Main'
+        	attributes 'Main-Class': 'eu.thog92.launcher.ftc.Main'
     }
     classifier = 'demo' 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

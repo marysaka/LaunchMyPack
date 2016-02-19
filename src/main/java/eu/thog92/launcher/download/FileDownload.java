@@ -1,24 +1,19 @@
 package eu.thog92.launcher.download;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
 
 public class FileDownload extends Downloadable
 {
-    
+
     private long filesize;
-    
+
     public FileDownload(URL u, File f, long size)
     {
         super(u, f);
         this.filesize = size;
     }
-    
+
     @Override
     public String download() throws IOException
     {
@@ -27,12 +22,12 @@ public class FileDownload extends Downloadable
         if (!target.exists())
         {
             needupdate = true;
-            
+
             try
             {
                 target.getParentFile().mkdirs();
                 target.createNewFile();
-                
+
             } catch (IOException ex)
             {
                 ex.printStackTrace();
@@ -40,30 +35,31 @@ public class FileDownload extends Downloadable
             }
         } else
         {
-            long lenght = FileUtils.sizeOf(target);
-            if (!(lenght == filesize))
+            long length = target.length();
+            if (!(length == filesize))
             {
                 needupdate = true;
             }
         }
-        
+
         if (needupdate)
         {
             InputStream in = null;
-            FileOutputStream fout = null;
+            FileOutputStream fOut = null;
             try
             {
                 in = url.openStream();
-                fout = new FileOutputStream(target);
-                
+                fOut = new FileOutputStream(target);
+
                 byte data[] = new byte[1024];
                 int count;
                 long totalBytesRead = 0;
                 while ((count = in.read(data, 0, 1024)) != -1)
                 {
-                    fout.write(data, 0, count);
+                    fOut.write(data, 0, count);
                     totalBytesRead += count;
-                    view.setInfo("Downloading " + fileName + " (" + ((totalBytesRead / filesize) * 100) + " %)");
+                    if (view != null)
+                        view.setInfo("Downloading " + fileName + " (" + ((totalBytesRead / filesize) * 100) + " %)");
 
                 }
             } catch (Exception e)
@@ -74,36 +70,35 @@ public class FileDownload extends Downloadable
                 target.delete();
             } finally
             {
-                if (in != null)
-                    try
-                    {
-                        in.close();
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                        target.delete();
-                    }
-                if (fout != null)
-                    try
-                    {
-                        fout.close();
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                        target.delete();
-                    }
+                this.close(in);
+                this.close(fOut);
                 // if(Launcher.getInstance().getStatut() != null)
                 // {
                 // Statut.setInfo("File " + fileName +
                 // " downloaded successfully");
                 // }
-                
+
             }
-            return"File " + fileName
+            return "File " + fileName
                     + " downloaded successfully";
         }
         return "ERROR";
-        
+
     }
-    
+
+    private void close(Closeable closeable)
+    {
+        if (closeable != null)
+        {
+            try
+            {
+                closeable.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+                target.delete();
+            }
+        }
+    }
+
 }

@@ -11,26 +11,26 @@ public class LimitedCapacityList<T>
     private final ReadWriteLock locks = new ReentrantReadWriteLock();
     private int size;
     private int head;
-    
+
     public LimitedCapacityList(Class<? extends T> clazz, int maxSize)
     {
         this.clazz = clazz;
         this.items = (T[]) Array.newInstance(clazz, maxSize);
     }
-    
+
     public T add(T value)
     {
         this.locks.writeLock().lock();
-        
+
         this.items[this.head] = value;
         this.head = ((this.head + 1) % getMaxSize());
         if (this.size < getMaxSize())
             this.size += 1;
-        
+
         this.locks.writeLock().unlock();
         return value;
     }
-    
+
     public int getSize()
     {
         this.locks.readLock().lock();
@@ -38,7 +38,7 @@ public class LimitedCapacityList<T>
         this.locks.readLock().unlock();
         return result;
     }
-    
+
     public int getMaxSize()
     {
         this.locks.readLock().lock();
@@ -46,11 +46,11 @@ public class LimitedCapacityList<T>
         this.locks.readLock().unlock();
         return result;
     }
-    
+
     public T[] getItems()
     {
         final T[] result = (T[]) Array.newInstance(clazz, size);
-        
+
         locks.readLock().lock();
         for (int i = 0; i < size; i++)
         {
@@ -60,7 +60,7 @@ public class LimitedCapacityList<T>
             result[i] = items[pos];
         }
         locks.readLock().unlock();
-        
+
         return result;
     }
 }

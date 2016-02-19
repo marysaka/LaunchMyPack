@@ -6,38 +6,45 @@ import java.util.List;
 
 public class ExtractRules
 {
-  private List<String> exclude = new ArrayList<String>();
-  
-  public ExtractRules() {}
-  
-  public ExtractRules(String... exclude)
-  {
-    if (exclude != null) {
-      Collections.addAll(this.exclude, exclude);
+    private List<String> exclude = new ArrayList<String>();
+
+    public ExtractRules()
+    {
     }
-  }
-  
-  public ExtractRules(ExtractRules rules)
-  {
-    for (String exclude : rules.exclude) {
-      this.exclude.add(exclude);
-    }
-  }
-  
-  public List<String> getExcludes()
-  {
-    return this.exclude;
-  }
-  
-  public boolean shouldExtract(String path)
-  {
-    if (this.exclude != null) {
-      for (String rule : this.exclude) {
-        if (path.startsWith(rule)) {
-          return false;
+
+    public ExtractRules(String... exclude)
+    {
+        if (exclude != null)
+        {
+            Collections.addAll(this.exclude, exclude);
         }
-      }
     }
-    return true;
-  }
+
+    public ExtractRules(ExtractRules rules)
+    {
+        for (String exclude : rules.exclude)
+        {
+            this.exclude.add(exclude);
+        }
+    }
+
+    public List<String> getExcludes()
+    {
+        return this.exclude;
+    }
+
+    public boolean shouldExtract(String path)
+    {
+        if (this.exclude != null)
+        {
+            for (String rule : this.exclude)
+            {
+                if (path.startsWith(rule))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

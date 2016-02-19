@@ -1,14 +1,15 @@
-package eu.thog92.launcher.demoimpl.model;
-
-import java.io.File;
+package eu.thog92.launcher.model;
 
 import eu.thog92.launcher.util.Util;
+
+import java.io.File;
 
 public class ModPack
 {
     private String name;
     private File workdir;
     private RemotePack pack;
+
     public ModPack(RemotePack pack)
     {
         this.pack = pack;

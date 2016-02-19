@@ -1,13 +1,15 @@
-package eu.thog92.launcher.demoimpl.model;
+package eu.thog92.launcher.model;
 
 public class RemotePack
 {
     private String name;
     private String url;
-    
-    public RemotePack() {}
-    
-    
+
+    public RemotePack()
+    {
+    }
+
+
     @Override
     public String toString()
     {
@@ -20,7 +22,7 @@ public class RemotePack
         // TODO Auto-generated method stub
         return name;
     }
-    
+
     public String getURL()
     {
         return url;

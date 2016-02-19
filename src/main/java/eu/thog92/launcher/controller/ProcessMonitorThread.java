@@ -1,21 +1,21 @@
 package eu.thog92.launcher.controller;
 
+import eu.thog92.launcher.launch.JavaProcess;
+import eu.thog92.launcher.launch.JavaProcessRunnable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import eu.thog92.launcher.launch.JavaProcess;
-import eu.thog92.launcher.launch.JavaProcessRunnable;
-
 public class ProcessMonitorThread extends Thread
 {
     private final JavaProcess process;
-    
+
     public ProcessMonitorThread(JavaProcess process)
     {
         this.process = process;
     }
-    
+
     @Override
     public void run()
     {
@@ -23,7 +23,7 @@ public class ProcessMonitorThread extends Thread
                 .getRawProcess().getInputStream());
         BufferedReader buf = new BufferedReader(reader);
         String line = null;
-        
+
         while (this.process.isRunning())
         {
             try
@@ -31,7 +31,7 @@ public class ProcessMonitorThread extends Thread
                 while ((line = buf.readLine()) != null)
                 {
                     System.out.println("Client> " + line);
-                    
+
                     this.process.getSysOutLines().add(line);
                 }
             } catch (IOException ex)
@@ -44,13 +44,13 @@ public class ProcessMonitorThread extends Thread
                     reader.close();
                 } catch (IOException e)
                 {
-                    
+
                 }
             }
         }
-        
+
         JavaProcessRunnable onExit = this.process.getExitRunnable();
-        
+
         if (onExit != null)
             onExit.onJavaProcessEnded(this.process);
     }

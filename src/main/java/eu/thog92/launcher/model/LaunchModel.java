@@ -1,62 +1,77 @@
-package eu.thog92.launcher.demoimpl.model;
+package eu.thog92.launcher.model;
 
 import com.google.gson.annotations.Expose;
-
-import eu.thog92.launcher.model.AbstractModel;
 import eu.thog92.launcher.version.Version;
 
 public class LaunchModel extends AbstractModel
 {
-    @Expose private String username;
+    @Expose
+    private String username;
     private Version version;
-    @Expose private int ram;
-    
+    @Expose
+    private int ram;
+
     private String token;
-    
-    
-    public LaunchModel() { this.ram = 1024;}
-    public void setUsername(String u)
+    private String profileID;
+
+
+    public LaunchModel()
     {
-        this.username = u;
+        this.ram = 1024;
     }
-    
-    public void setVersion(Version v)
-    {
-        this.version = v;
-    }
-    
+
     public String getUsername()
     {
         return username;
     }
-    
+
+    public void setUsername(String u)
+    {
+        this.username = u;
+    }
+
     public synchronized Version getVersion()
     {
         return version;
     }
-    
+
+    public void setVersion(Version v)
+    {
+        this.version = v;
+    }
+
     public void setModPack(Object[] ignore)
     {
-        
+
     }
-    
+
     public int getRAM()
     {
         return ram;
     }
-    
+
     public void setRAM(int value)
     {
         this.ram = value;
     }
+
     public String getToken()
     {
         return token;
     }
+
+    public String getProfileID()
+    {
+        return profileID;
+    }
+
     public void setToken(String token)
     {
         this.token = token;
     }
-    
-    
+
+    public void setProfileID(String profileID)
+    {
+        this.profileID = profileID;
+    }
 }

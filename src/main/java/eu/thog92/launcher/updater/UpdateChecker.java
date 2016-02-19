@@ -1,66 +1,26 @@
 package eu.thog92.launcher.updater;
 
+import eu.thog92.launcher.download.FileDownload;
+import eu.thog92.launcher.view.DownloadView;
+import eu.thog92.launcher.util.Constants;
+import eu.thog92.launcher.util.Util;
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 
-import org.apache.commons.io.FileUtils;
-
-import eu.thog92.launcher.download.FileDownload;
-import eu.thog92.launcher.util.Util;
-
 public class UpdateChecker
 {
-    public static String verString = "";
-    private static final String DOWNLOAD_ADRESS = "http://wherecraft.fr/Launcher/Wherecraft.jar";
-    private boolean shouldUpdate;
-    private URL updateURL;
     private final transient boolean isDevMod;
-    
+    private URL updateURL;
+
     public UpdateChecker(final boolean dm)
     {
         isDevMod = dm;
-        loadInfo();
-        try
-        {
-            FileUtils.deleteQuietly(new File(Util.getWorkingDirectory(), "updatetemp"));
-        } catch (Exception ignored)
-        {
-            System.err.println(ignored.getMessage());
-        }
     }
-    
-    private void loadInfo()
-    {
-        
-    }
-    
-    public boolean shouldUpdate()
-    {
-        return shouldUpdate;
-    }
-    
-    private int tryGetFileSize(URL url)
-    {
-        HttpURLConnection conn = null;
-        try
-        {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            conn.getInputStream();
-            return conn.getContentLength();
-        } catch (IOException e)
-        {
-            return -1;
-        } finally
-        {
-            conn.disconnect();
-        }
-    }
-    
+
     public void update()
     {
         String path = null;
@@ -84,43 +44,53 @@ public class UpdateChecker
         {
             try
             {
-                updateURL = new URL(DOWNLOAD_ADRESS);
-                
-                int filesize = tryGetFileSize(updateURL);
+                updateURL = new URL(Constants.getLauncherURL());
+
+                int filesize = Util.tryGetFileSize(updateURL);
                 int filesizeclient = (int) new File(path).length();
                 System.out.println(filesize + " - " + filesizeclient);
                 if (filesize != filesizeclient)
                 {
                     File temporaryUpdate = new File(temporaryUpdatePath);
                     temporaryUpdate.getParentFile().mkdir();
-                    
+
                     FileDownload downloadabletmp = new FileDownload(updateURL,
                             temporaryUpdate, filesize);
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    final DownloadView view = new DownloadView();
+                    view.run();
+                    view.setVisible(true);
+                    downloadabletmp.setView(view);
                     try
                     {
                         downloadabletmp.download();
                         SelfUpdate.runUpdate(path, temporaryUpdatePath);
                     } catch (IOException e)
                     {
-                        
                         e.printStackTrace();
                     }
-                    // launcher.println("Server : "+filesize + " Client : " +
-                    // filesizeclient );
-                    
+
                 }
-                //
-                // DownloadUtils.downloadToFile(updateURL, temporaryUpdate);
-                
-                // SelfUpdate.runUpdate(path, temporaryUpdatePath);
             } catch (MalformedURLException e)
             {
                 System.err.println(e.getMessage());
+            } catch (IllegalAccessException e)
+            {
+                e.printStackTrace();
+            } catch (InstantiationException e)
+            {
+                e.printStackTrace();
+            } catch (UnsupportedLookAndFeelException e)
+            {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e)
+            {
+                e.printStackTrace();
             }
-            
+
         } else
         {
-            System.out.println("Auto Update disable (Dev Mode ?)");
+            System.out.println("Auto Update disabled (Dev Mode ?)");
         }
     }
 }

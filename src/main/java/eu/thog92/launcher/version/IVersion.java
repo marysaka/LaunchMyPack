@@ -2,18 +2,19 @@ package eu.thog92.launcher.version;
 
 import java.util.Date;
 
-public interface IVersion {
-    public abstract String getId();
+public interface IVersion
+{
+    String getId();
 
-    public abstract ReleaseType getType();
+    ReleaseType getType();
 
-    public abstract void setType(ReleaseType paramReleaseType);
+    void setType(ReleaseType paramReleaseType);
 
-    public abstract Date getUpdatedTime();
+    Date getUpdatedTime();
 
-    public abstract void setUpdatedTime(Date paramDate);
+    void setUpdatedTime(Date paramDate);
 
-    public abstract Date getReleaseTime();
+    Date getReleaseTime();
 
-    public abstract void setReleaseTime(Date paramDate);
+    void setReleaseTime(Date paramDate);
 }

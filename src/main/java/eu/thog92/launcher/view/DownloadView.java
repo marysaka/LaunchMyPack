@@ -1,49 +1,55 @@
-package eu.thog92.launcher.demoimpl.view;
+package eu.thog92.launcher.view;
 
-import java.awt.BorderLayout;
+import eu.thog92.launcher.view.IDownloadView;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JFrame;
-import javax.swing.JProgressBar;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-public class DownloadIView extends JFrame implements Runnable
+public class DownloadView extends JFrame implements Runnable, IDownloadView
 {
-    
-    private static String infotxt;
+
     private static final long serialVersionUID = -3521539622682742964L;
+    private static String infotxt;
     private final JPanel contentPanel = new JPanel();
     private JProgressBar progressBar;
     private JLabel statut = new JLabel();
     private String statuttxt;
     private JLabel label;
-    
+
+    /**
+     * Create the dialog.
+     */
+    public DownloadView()
+    {
+    }
+
+    @Override
+    public String getStatus()
+    {
+        return null;
+    }
+
     public String getInfo()
     {
         return infotxt;
     }
-    
-    public String getStatut()
-    {
-        return infotxt;
-    }
-    
-    public void setProgressValue(int value)
-    {
-        this.progressBar.setValue(value);
-    }
+
     public void setInfo(String newinfo)
     {
         infotxt = newinfo;
         label.setText(newinfo);
     }
-    
+
+    public String getStatut()
+    {
+        return infotxt;
+    }
+
     public void setStatut(String newstatut)
     {
         if (statut != null)
@@ -51,21 +57,26 @@ public class DownloadIView extends JFrame implements Runnable
             statuttxt = newstatut;
             statut.setText(statuttxt);
         }
-        
+
     }
-    
-    /**
-     * Create the dialog.
-     */
-    public DownloadIView()
+
+    @Override
+    public void setIndeterminate(boolean isIndeterminate)
     {
+        this.progressBar.setIndeterminate(isIndeterminate);
     }
-    
-    public void destroy()
+
+    @Override
+    public void setStringPainted(boolean painted)
     {
-        dispose();
+        this.progressBar.setStringPainted(painted);
     }
-    
+
+    public void setProgressValue(int value)
+    {
+        this.progressBar.setValue(value);
+    }
+
     @Override
     public void run()
     {
@@ -78,23 +89,23 @@ public class DownloadIView extends JFrame implements Runnable
             {
                 onExit();
             }
-            
+
             public void onExit()
             {
                 System.err.println("Exit");
                 System.exit(0);
             }
         });
-        
+
         infotxt = "Loading...";
         setBounds(100, 100, 600, 146);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
-        
+
         progressBar = new JProgressBar(0, 100);
         label = new JLabel(infotxt);
-        
+
         GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
         gl_contentPanel.setHorizontalGroup(gl_contentPanel.createParallelGroup(
                 Alignment.LEADING).addGroup(
@@ -125,23 +136,25 @@ public class DownloadIView extends JFrame implements Runnable
                                 GroupLayout.PREFERRED_SIZE).addContainerGap()));
         contentPanel.setLayout(gl_contentPanel);
     }
-    
+
     public void finish()
     {
+
     }
-    
+
     public void startProgress()
     {
+
     }
 
     public JProgressBar getProgressBar()
     {
-        return progressBar;       
+        return progressBar;
     }
 
     public void setProgressTxt(String string)
     {
         progressBar.setString(string);
-        
+
     }
 }

@@ -9,17 +9,17 @@ import java.io.IOException;
 public class ReleaseTypeAdapterFactory<T extends ReleaseType> extends
         TypeAdapter<T>
 {
-    
+
     public ReleaseTypeAdapterFactory()
     {
     }
-    
+
     @Override
     public void write(JsonWriter out, T value) throws IOException
     {
         out.value(value.getName());
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public T read(JsonReader in) throws IOException

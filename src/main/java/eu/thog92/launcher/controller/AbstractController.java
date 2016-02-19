@@ -1,39 +1,45 @@
 package eu.thog92.launcher.controller;
 
+import eu.thog92.launcher.view.IView;
+import eu.thog92.launcher.model.AbstractModel;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import eu.thog92.launcher.demoimpl.view.IView;
-import eu.thog92.launcher.model.AbstractModel;
-
-public abstract class AbstractController implements PropertyChangeListener {
+public abstract class AbstractController implements PropertyChangeListener
+{
 
     private ArrayList<IView> registeredViews;
     private ArrayList<AbstractModel> registeredModels;
 
-    public AbstractController() {
+    public AbstractController()
+    {
         registeredViews = new ArrayList<IView>();
         registeredModels = new ArrayList<AbstractModel>();
     }
 
-    public void addModel(AbstractModel model) {
+    public void addModel(AbstractModel model)
+    {
         registeredModels.add(model);
         model.addPropertyChangeListener(this);
     }
 
-    public void removeModel(AbstractModel model) {
+    public void removeModel(AbstractModel model)
+    {
         registeredModels.remove(model);
         model.removePropertyChangeListener(this);
     }
 
-    public void addView(IView view) {
+    public void addView(IView view)
+    {
         registeredViews.add(view);
     }
 
-    public void removeView(IView view) {
+    public void removeView(IView view)
+    {
         registeredViews.remove(view);
     }
 
@@ -41,13 +47,16 @@ public abstract class AbstractController implements PropertyChangeListener {
     // and propagate them on to all the views.
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        for (IView view : registeredViews) {
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        for (IView view : registeredViews)
+        {
             view.modelPropertyChange(evt);
         }
     }
 
-    public void propertyChange(Object source, String propertyName, Object value) {
+    public void propertyChange(Object source, String propertyName, Object value)
+    {
         this.propertyChange(new PropertyChangeEvent(source, propertyName, null,
                 value));
     }
@@ -59,26 +68,31 @@ public abstract class AbstractController implements PropertyChangeListener {
      * the property in question. If it isn't, a NoSuchMethodException is thrown,
      * which the method ignores.
      *
-     * @param propertyName
-     *            = The name of the property.
-     * @param newValue
-     *            = An object that represents the new value of the property.
+     * @param propertyName = The name of the property.
+     * @param newValue     = An object that represents the new value of the property.
      */
-    protected void setModelProperty(String propertyName, Object newValue) {
-        for (AbstractModel model : registeredModels) {
+    protected void setModelProperty(String propertyName, Object newValue)
+    {
+        for (AbstractModel model : registeredModels)
+        {
 
             Method method;
-            try {
+            try
+            {
                 method = model.getClass().getMethod(propertyName,
-                        new Class[] { newValue.getClass() }
 
-                );
+                        newValue.getClass());
                 method.invoke(model, newValue);
-            } catch (NoSuchMethodException e) {
-            } catch (SecurityException e) {
-            } catch (IllegalAccessException e) {
-            } catch (IllegalArgumentException e) {
-            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException e)
+            {
+            } catch (SecurityException e)
+            {
+            } catch (IllegalAccessException e)
+            {
+            } catch (IllegalArgumentException e)
+            {
+            } catch (InvocationTargetException e)
+            {
 
             }
 

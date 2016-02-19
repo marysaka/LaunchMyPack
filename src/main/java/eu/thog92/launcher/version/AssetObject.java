@@ -1,20 +1,24 @@
 package eu.thog92.launcher.version;
 
 
-public class AssetObject {
+public class AssetObject
+{
     private String hash;
     private long size;
 
-    public String getHash() {
+    public String getHash()
+    {
         return this.hash;
     }
 
-    public long getSize() {
+    public long getSize()
+    {
         return this.size;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o)
             return true;
         if ((o == null) || (getClass() != o.getClass()))
@@ -22,15 +26,12 @@ public class AssetObject {
 
         AssetObject that = (AssetObject) o;
 
-        if (this.size != that.size)
-            return false;
-        return this.hash.equals(that.hash);
+        return this.size == that.size && this.hash.equals(that.hash);
     }
 
     @Override
-    public int hashCode() {
-        int result = this.hash.hashCode();
-        result = 31 * result + (int) (this.size ^ this.size >>> 32);
-        return result;
+    public int hashCode()
+    {
+        return 31 * this.hash.hashCode() + (int) (this.size ^ this.size >>> 32);
     }
 }
